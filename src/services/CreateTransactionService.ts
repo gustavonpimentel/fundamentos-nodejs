@@ -19,6 +19,16 @@ class CreateTransactionService {
       throw Error('Type must be a income or outcome');
     }
 
+    const balance = this.transactionsRepository.getBalance();
+
+    if (type === 'outcome') {
+      if (balance.total < value) {
+        throw Error(
+          'You cannot create outcome transaction without a valid balance',
+        );
+      }
+    }
+
     const transaction = this.transactionsRepository.create({
       title,
       value,
